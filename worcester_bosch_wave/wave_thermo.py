@@ -17,10 +17,7 @@ class WaveThermostat:
         """
         Set the control mode of the thermostat
 
-        Parameters
-        ----------
-        mode : str
-            Control mode, either "manual" or "clock"
+        mode: Control mode, either "manual" or "clock"
         """
         self.setter.post_message(f'{PATH_BASE}usermode', mode)
 

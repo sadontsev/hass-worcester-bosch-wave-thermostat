@@ -41,7 +41,6 @@ class WaveStatus(WaveMessenger):
             data = data.decode('utf-8')
             if len(data) > 0:
                 self.data = json.loads(data)['value']
-                # pprint(data)
 
                 # Temperature set point (ie. temperature it is aiming for)
                 self.set_point = float(self.data['TSP'])
