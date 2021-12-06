@@ -35,8 +35,8 @@ class WaveThermostat:
             )
             self.setter.post_message(f'{PATH_BASE}manualTempOverride/status', 'on')
 
-    def override(self, b):
-        if b:
+    def override(self, should_override):
+        if should_override:
             self.setter.post_message(f'{PATH_BASE}manualTempOverride/status', 'on')
         else:
             self.setter.post_message(f'{PATH_BASE}manualTempOverride/status', 'off')
