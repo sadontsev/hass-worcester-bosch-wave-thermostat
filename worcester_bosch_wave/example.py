@@ -1,10 +1,13 @@
+import os
 import time
 from pprint import pprint
 
 from wave_thermo import WaveThermostat
 
 wave = WaveThermostat(
-    serial_number='', access_code='', password='',
+    serial_number=os.environ.get('WAVE_SERIAL_NUMBER'),
+    access_code=os.environ.get('WAVE_ACCESS_CODE'),
+    password=os.environ.get('WAVE_PASSWORD'),
 )
 
 wave.status.update()
