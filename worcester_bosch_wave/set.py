@@ -4,7 +4,7 @@ from messenger import WaveMessenger
 class WaveSet(WaveMessenger):
     current_temp = None
     set_point = None
-    boiler_on = None
+    is_boiler_on = None
 
     def __init__(self, serial_number, access_code, password):
         super().__init__(serial_number, access_code, password, '')

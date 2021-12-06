@@ -5,9 +5,19 @@ from utils import parse_on_off
 
 
 class WaveStatus(WaveMessenger):
+    data = None
+
+    current_switch_point = None
     current_temp = None
+    is_boiler_on = None
+    is_day_as_sunday = None
+    is_holiday_mode = None
+    is_hot_water_enabled = None
+    is_temp_override_on = None
+    is_tomorrow_as_sunday = None
+    program_mode = None
     set_point = None
-    boiler_on = None
+    temp_override_duration = None
 
     def __init__(self, serial_number, access_code, password):
         super().__init__(
@@ -41,39 +51,38 @@ class WaveStatus(WaveMessenger):
             data = data.decode('utf-8')
             if len(data) > 0:
                 self.data = json.loads(data)['value']
-
-                # Temperature set point (ie. temperature it is aiming for)
-                self.set_point = float(self.data['TSP'])
-
-                # Current measured temperature at thermostat
-                self.current_temp = float(self.data['IHT'])
-
-                # Is hot water on or off
-                self.hot_water = parse_on_off(self.data['DHW'])
-
-                # Program mode: 'manual' or 'clock'
-                self.program_mode = self.data['UMD']
-
-                # Temperature Override Duration
-                self.temp_override_duration = float(self.data['TOD'])
-
-                self.current_switch_point = float(self.data['CSP'])
-
-                self.temp_override_on = parse_on_off(self.data['TOR'])
-
-                self.holiday_mode = parse_on_off(self.data['HMD'])
-
-                self.day_as_sunday = parse_on_off(self.data['DAS'])
-
-                self.tomorrow_as_sunday = parse_on_off(self.data['TAS'])
-
-                # Is the boiler on or off (ie. flame on or off)
-                if self.data['BAI'] == 'No':
-                    self.boiler_on = 0
-                elif self.data['BAI'] == 'CH' or self.data['BAI'] == 'HW':
-                    self.boiler_on = 1
-
+                self.set_updated_values(self.data)
                 self.disconnect()
+
+    def set_updated_values(self, data):
+        # Temperature set point (ie. temperature it is aiming for)
+        self.set_point = float(data['TSP'])
+
+        # Current thermostat temperature
+        self.current_temp = float(data['IHT'])
+
+        # Program mode: MANUAL or CLOCK
+        self.program_mode = data['UMD']
+
+        self.current_switch_point = float(data['CSP'])
+
+        self.is_day_as_sunday = parse_on_off(data['DAS'])
+
+        self.is_holiday_mode = parse_on_off(data['HMD'])
+
+        self.is_hot_water_enabled = parse_on_off(data['DHW'])
+
+        self.is_temp_override_on = parse_on_off(data['TOR'])
+
+        self.is_tomorrow_as_sunday = parse_on_off(data['TAS'])
+
+        self.temp_override_duration = float(data['TOD'])
+
+        # Is the boiler on or off (ie. flame on or off)
+        if data['BAI'] == 'No':
+            self.is_boiler_on = False
+        elif data['BAI'] == 'CH' or data['BAI'] == 'HW':
+            self.is_boiler_on = True
 
     def update(self):
         self.run()
