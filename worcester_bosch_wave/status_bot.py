@@ -1,6 +1,6 @@
 import json
 
-from base_bot import WaveMessenger
+from messenger import WaveMessenger
 from utils import parse_on_off
 
 

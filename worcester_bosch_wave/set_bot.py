@@ -1,4 +1,4 @@
-from base_bot import WaveMessenger
+from messenger import WaveMessenger
 
 
 class SetBot(WaveMessenger):
