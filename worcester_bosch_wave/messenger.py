@@ -10,12 +10,12 @@ from worcester_bosch_wave.constants import SECRET
 class WaveMessenger(sleekxmpp.ClientXMPP):
     def __init__(self, serial_number, access_code, password, message):
 
-        jid = 'rrccontact_%s@wa2-mz36-qrmzh6.bosch.de' % serial_number
-        connection_password = 'Ct7ZR03b_%s' % access_code
+        jid = f'rrccontact_{serial_number}@wa2-mz36-qrmzh6.bosch.de'
+        connection_password = f'Ct7ZR03b_{access_code}'
 
         sleekxmpp.ClientXMPP.__init__(self, jid, connection_password)
 
-        self.recipient = 'rrcgateway_%s@wa2-mz36-qrmzh6.bosch.de' % serial_number
+        self.recipient = f'rrcgateway_{serial_number}@wa2-mz36-qrmzh6.bosch.de'
         self.msg = message
 
         self.add_event_handler('session_start', self.start)
