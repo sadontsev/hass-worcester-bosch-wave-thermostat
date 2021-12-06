@@ -1,0 +1,83 @@
+import base64
+
+import sleekxmpp
+from Crypto.Cipher import AES
+
+from worcester_bosch_wave.constants import SECRET
+from utils import get_md5
+
+
+class BaseWaveMessageBot(sleekxmpp.ClientXMPP):
+    def __init__(self, serial_number, access_code, password, message):
+
+        jid = 'rrccontact_%s@wa2-mz36-qrmzh6.bosch.de' % serial_number
+        connection_password = 'Ct7ZR03b_%s' % access_code
+
+        sleekxmpp.ClientXMPP.__init__(self, jid, connection_password)
+
+        self.recipient = 'rrcgateway_%s@wa2-mz36-qrmzh6.bosch.de' % serial_number
+        self.msg = message
+
+        self.add_event_handler('session_start', self.start)
+        self.add_event_handler('message', self.message)
+
+        self.connected = False
+
+        abyte1 = get_md5(access_code.encode() + SECRET)
+        abyte2 = get_md5(SECRET + password.encode())
+
+        self.key = abyte1 + abyte2
+
+    def connect(self):
+        self.connected = True
+        return sleekxmpp.ClientXMPP.connect(
+            self, ('wa2-mz36-qrmzh6.bosch.de', 5222), use_ssl=False, use_tls=False
+        )
+
+    def disconnect(self):
+        self.connected = False
+        return sleekxmpp.ClientXMPP.disconnect(self)
+
+    def run(self):
+        self.connect()
+        self.go()
+        self.process(block=True)
+
+    def start(self, event):
+        self.send_presence()
+        self.get_roster()
+
+    def go(self):
+        if not self.connected:
+            self.connect()
+
+        self.send_message(mto=self.recipient, mbody=self.msg, mtype='chat')
+
+    def set_message(self, url, value):
+        j = '{"value":%s}' % (repr(value))
+
+        remainder = len(j) % 16
+
+        j = j + '\x00' * (16 - remainder)
+
+        self.msg = 'PUT {} HTTP:/1.0\nContent-Type: application/json\nContent-Length: 25\nUser-Agent: NefitEasy\n\n\n\n{}\n'.format(
+            url, self.encode(j).decode('utf-8')
+        )
+
+    def encode(self, s):
+        a = AES.new(self.key)
+        a = AES.new(self.key, AES.MODE_ECB)
+        res = a.encrypt(s)
+
+        encoded = base64.b64encode(res)
+
+        return encoded
+
+    def decode(self, data):
+        decoded = base64.b64decode(data)
+
+        a = AES.new(self.key)
+        a = AES.new(self.key, AES.MODE_ECB)
+        res = a.decrypt(decoded)
+
+        return res

@@ -1,0 +1,11 @@
+{
+  "name": "Worcester Bosch Wave Smart Control",
+  "cloud_polling": true,
+  "codeowners": ["@juanjsebgarcia"],
+  "dependencies": [],
+  "documentation": "https://github.com/juanjsebgarcia/hass-worcester-bosch-wave-thermostat",
+  "domain": "hass_worcester_bosch_wave_thermostat",
+  "iot_class": "cloud_polling",
+  "requirements": ["pycrypto", "sleekxmpp"],
+  "version": "0.0.1"
+}
