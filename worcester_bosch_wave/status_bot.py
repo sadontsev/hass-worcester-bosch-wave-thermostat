@@ -1,10 +1,10 @@
 import json
 
-from base_bot import BaseWaveMessageBot
+from base_bot import WaveMessenger
 from utils import parse_on_off
 
 
-class StatusBot(BaseWaveMessageBot):
+class StatusBot(WaveMessenger):
     current_temp = None
     set_point = None
     boiler_on = None
