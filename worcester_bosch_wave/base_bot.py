@@ -23,18 +23,18 @@ class BaseWaveMessageBot(sleekxmpp.ClientXMPP):
 
         self.connected = False
 
-        abyte1 = get_md5(access_code.encode() + SECRET)
-        abyte2 = get_md5(SECRET + password.encode())
+        abyte_1 = get_md5(access_code.encode() + SECRET)
+        abyte_2 = get_md5(SECRET + password.encode())
 
-        self.key = abyte1 + abyte2
+        self.key = abyte_1 + abyte_2
 
-    def connect(self):
+    def connect(self, **kwargs):
         self.connected = True
         return sleekxmpp.ClientXMPP.connect(
             self, ('wa2-mz36-qrmzh6.bosch.de', 5222), use_ssl=False, use_tls=False
         )
 
-    def disconnect(self):
+    def disconnect(self, **kwargs):
         self.connected = False
         return sleekxmpp.ClientXMPP.disconnect(self)
 
@@ -43,7 +43,7 @@ class BaseWaveMessageBot(sleekxmpp.ClientXMPP):
         self.go()
         self.process(block=True)
 
-    def start(self, event):
+    def start(self):
         self.send_presence()
         self.get_roster()
 
@@ -65,7 +65,6 @@ class BaseWaveMessageBot(sleekxmpp.ClientXMPP):
         )
 
     def encode(self, s):
-        a = AES.new(self.key)
         a = AES.new(self.key, AES.MODE_ECB)
         res = a.encrypt(s)
 
