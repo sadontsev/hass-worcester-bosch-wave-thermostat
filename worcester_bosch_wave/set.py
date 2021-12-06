@@ -1,7 +1,7 @@
 from messenger import WaveMessenger
 
 
-class SetBot(WaveMessenger):
+class WaveSet(WaveMessenger):
     current_temp = None
     set_point = None
     boiler_on = None

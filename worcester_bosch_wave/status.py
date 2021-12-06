@@ -4,7 +4,7 @@ from messenger import WaveMessenger
 from utils import parse_on_off
 
 
-class StatusBot(WaveMessenger):
+class WaveStatus(WaveMessenger):
     current_temp = None
     set_point = None
     boiler_on = None

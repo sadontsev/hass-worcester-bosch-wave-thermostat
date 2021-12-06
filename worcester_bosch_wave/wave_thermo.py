@@ -1,15 +1,15 @@
 from worcester_bosch_wave.constants import PATH_BASE
-from set_bot import SetBot
-from status_bot import StatusBot
+from set import WaveSet
+from status import WaveStatus
 
 
 class WaveThermostat:
     def __init__(self, serial_number, access_code, password):
-        self.status = StatusBot(
+        self.status = WaveStatus(
             serial_number=serial_number, access_code=access_code, password=password
         )
 
-        self.setter = SetBot(
+        self.setter = WaveSet(
             serial_number=serial_number, access_code=access_code, password=password
         )
 
