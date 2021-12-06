@@ -1,8 +1,11 @@
 import logging
+import os
 
 from homeassistant.components.climate import ClimateEntity
 from homeassistant.components.climate import const as climate_const
 from homeassistant.const import ATTR_TEMPERATURE, TEMP_CELSIUS
+
+from worcester_bosch_wave.wave_thermo import WaveThermostat
 
 from constants import DOMAIN
 
@@ -36,6 +39,13 @@ class WorcesterWaveEntity(ClimateEntity):
             climate_const.HVAC_MODE_HEAT,
             climate_const.HVAC_MODE_AUTO,
         ]
+        self._attr_target_temperature_step = 0.5
+
+        self.wave = WaveThermostat(
+            serial_number=os.environ.get('WAVE_SERIAL_NUMBER'),
+            access_code=os.environ.get('WAVE_ACCESS_CODE'),
+            password=os.environ.get('WAVE_PASSWORD'),
+        )
 
     @property
     def name(self):
@@ -50,12 +60,16 @@ class WorcesterWaveEntity(ClimateEntity):
     @property
     def current_temperature(self) -> float | None:
         """Return the current temperature."""
-        return self._attr_current_temperature
+        self.wave.status.update()
+        self._attr_current_temperature = self.wave.status.current_temp
+        return super().current_temperature
 
     @property
     def target_temperature(self) -> float | None:
         """Return the temperature we try to reach."""
-        return self._attr_target_temperature
+        self.wave.status.update()
+        self._attr_target_temperature = self.wave.status.set_point
+        return super().target_temperature
 
     @property
     def target_temperature_step(self) -> float | None:
@@ -88,69 +102,12 @@ class WorcesterWaveEntity(ClimateEntity):
 
     def set_temperature(self, **kwargs) -> None:
         """Set new target temperature."""
-        raise NotImplementedError()
-
-    async def async_set_temperature(self, **kwargs) -> None:
-        """Set new target temperature."""
-        await self.hass.async_add_executor_job(
-            ft.partial(self.set_temperature, **kwargs)
-        )
-
-    def set_humidity(self, humidity: int) -> None:
-        """Set new target humidity."""
-        raise NotImplementedError()
-
-    async def async_set_humidity(self, humidity: int) -> None:
-        """Set new target humidity."""
-        await self.hass.async_add_executor_job(self.set_humidity, humidity)
-
-    def set_fan_mode(self, fan_mode: str) -> None:
-        """Set new target fan mode."""
-        raise NotImplementedError()
-
-    async def async_set_fan_mode(self, fan_mode: str) -> None:
-        """Set new target fan mode."""
-        await self.hass.async_add_executor_job(self.set_fan_mode, fan_mode)
-
-    def set_hvac_mode(self, hvac_mode: str) -> None:
-        """Set new target hvac mode."""
-        raise NotImplementedError()
-
-    async def async_set_hvac_mode(self, hvac_mode: str) -> None:
-        """Set new target hvac mode."""
-        await self.hass.async_add_executor_job(self.set_hvac_mode, hvac_mode)
-
-    def set_swing_mode(self, swing_mode: str) -> None:
-        """Set new target swing operation."""
-        raise NotImplementedError()
-
-    async def async_set_swing_mode(self, swing_mode: str) -> None:
-        """Set new target swing operation."""
-        await self.hass.async_add_executor_job(self.set_swing_mode, swing_mode)
+        target_temp_high = kwargs.get(climate_const.ATTR_TARGET_TEMP_HIGH)
+        self.wave.set_temperature(target_temp_high)
 
     def set_preset_mode(self, preset_mode: str) -> None:
         """Set new preset mode."""
         raise NotImplementedError()
-
-    async def async_set_preset_mode(self, preset_mode: str) -> None:
-        """Set new preset mode."""
-        await self.hass.async_add_executor_job(self.set_preset_mode, preset_mode)
-
-    def turn_aux_heat_on(self) -> None:
-        """Turn auxiliary heater on."""
-        raise NotImplementedError()
-
-    async def async_turn_aux_heat_on(self) -> None:
-        """Turn auxiliary heater on."""
-        await self.hass.async_add_executor_job(self.turn_aux_heat_on)
-
-    def turn_aux_heat_off(self) -> None:
-        """Turn auxiliary heater off."""
-        raise NotImplementedError()
-
-    async def async_turn_aux_heat_off(self) -> None:
-        """Turn auxiliary heater off."""
-        await self.hass.async_add_executor_job(self.turn_aux_heat_off)
 
     async def async_turn_on(self) -> None:
         """Turn the entity on."""
