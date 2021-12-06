@@ -75,7 +75,6 @@ class WaveMessenger(sleekxmpp.ClientXMPP):
     def decode(self, data):
         decoded = base64.b64decode(data)
 
-        a = AES.new(self.key)
         a = AES.new(self.key, AES.MODE_ECB)
         res = a.decrypt(decoded)
 
