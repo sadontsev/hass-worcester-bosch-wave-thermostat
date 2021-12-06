@@ -1,6 +1,7 @@
-from worcester_bosch_wave.constants import PATH_BASE
 from set import WaveSet
 from status import WaveStatus
+
+from worcester_bosch_wave.constants import PATH_BASE
 
 
 class WaveThermostat:

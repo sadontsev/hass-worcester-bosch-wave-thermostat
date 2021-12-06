@@ -5,14 +5,10 @@ from homeassistant.components.climate import ClimateEntity
 from homeassistant.components.climate import const as climate_const
 from homeassistant.const import ATTR_TEMPERATURE, TEMP_CELSIUS
 
+from constants import DOMAIN
 from worcester_bosch_wave.wave_thermo import WaveThermostat
 
-from constants import DOMAIN
-
 _LOGGER = logging.getLogger(__name__)
-
-
-DOMAIN = 'hass_worcester_wave_thermostat'
 
 
 def setup_platform(hass, config, add_entities, discovery_info):

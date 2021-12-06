@@ -2,9 +2,9 @@ import base64
 
 import sleekxmpp
 from Crypto.Cipher import AES
+from utils import get_md5
 
 from worcester_bosch_wave.constants import SECRET
-from utils import get_md5
 
 
 class WaveMessenger(sleekxmpp.ClientXMPP):
@@ -60,9 +60,13 @@ class WaveMessenger(sleekxmpp.ClientXMPP):
 
         j = j + '\x00' * (16 - remainder)
 
-        self.msg = 'PUT {} HTTP:/1.0\nContent-Type: application/json\nContent-Length: 25\nUser-Agent: NefitEasy\n\n\n\n{}\n'.format(
-            url, self.encode(j).decode('utf-8')
-        )
+        self.msg = (
+            'PUT {} HTTP:/1.0\n'
+            'Content-Type: application/json\n'
+            'Content-Length: 25\n'
+            'User-Agent: NefitEasy\n'
+            '\n\n\n{}\n'
+        ).format(url, self.encode(j).decode('utf-8'))
 
     def encode(self, s):
         a = AES.new(self.key, AES.MODE_ECB)
