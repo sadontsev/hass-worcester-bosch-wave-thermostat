@@ -5,6 +5,15 @@ All notable changes to the Worcester Bosch Wave Home Assistant integration will 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.5] - 2025-09-22
+
+### Fixed
+- Stabilized XMPP connection logic in `worcester_bosch_wave/messenger.py` to properly process events with a timeout and disconnect cleanly.
+- Improved config flow error handling to distinguish invalid credentials vs connection failure.
+
+### Notes
+- If you previously saw "Failed to connect" when adding the device, please upgrade to v1.0.5 and try again.
+
 ## [1.0.4] - 2025-09-22
 
 ### Fixed

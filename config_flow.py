@@ -28,6 +28,14 @@ STEP_USER_DATA_SCHEMA = vol.Schema({
 })
 
 
+class CannotConnect(Exception):
+    pass
+
+
+class InvalidAuth(Exception):
+    pass
+
+
 async def validate_input(hass: HomeAssistant, data: Dict[str, Any]) -> Dict[str, Any]:
     """Validate the user input allows us to connect."""
     
@@ -38,15 +46,18 @@ async def validate_input(hass: HomeAssistant, data: Dict[str, Any]) -> Dict[str,
     # Test the connection
     try:
         status_client = WaveStatus(serial_number, access_code, password)
-        
+
         # Run the connection test in an executor
         await hass.async_add_executor_job(status_client.update)
-        
-        if not status_client.data:
-            raise Exception("Failed to connect to Worcester Bosch Wave thermostat")
-            
+
+        if not getattr(status_client, "data", None):
+            # Distinguish auth failure vs general connection error when possible
+            if getattr(status_client, "auth_failed", False):
+                raise InvalidAuth()
+            raise CannotConnect()
+
         _LOGGER.info("Successfully validated Worcester Bosch Wave connection")
-        
+
         # Return info that you want to store in the config entry
         return {
             "title": f"Worcester Bosch Wave ({serial_number})",
@@ -54,10 +65,15 @@ async def validate_input(hass: HomeAssistant, data: Dict[str, Any]) -> Dict[str,
             CONF_ACCESS_CODE: access_code,
             CONF_PASSWORD: password,
         }
-        
+
+    except InvalidAuth:
+        raise
+    except CannotConnect:
+        raise
     except Exception as e:
         _LOGGER.error(f"Connection validation failed: {e}")
-        raise
+        # Treat unexpected errors as connection issues for now
+        raise CannotConnect()
 
 
 class WorcesterWaveConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
@@ -84,8 +100,11 @@ class WorcesterWaveConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         try:
             info = await validate_input(self.hass, user_input)
-        except Exception:
-            _LOGGER.exception("Unexpected exception")
+        except InvalidAuth:
+            _LOGGER.warning("Invalid credentials provided for Worcester Bosch Wave")
+            errors["base"] = ERROR_INVALID_AUTH
+        except CannotConnect:
+            _LOGGER.exception("Cannot connect to Worcester Bosch Wave")
             errors["base"] = ERROR_CANNOT_CONNECT
         else:
             # Check if already configured
