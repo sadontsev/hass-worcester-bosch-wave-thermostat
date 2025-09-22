@@ -3,8 +3,8 @@
 A comprehensive Home Assistant integration for Worcester Bosch Wave thermostats, providing complete climate control and access to all 30+ available thermostat metrics.
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs)
-[![GitHub Release](https://img.shields.io/github/release/username/hass-worcester-bosch-wave-thermostat.svg)](https://github.com/username/hass-worcester-bosch-wave-thermostat/releases)
-[![License](https://img.shields.io/github/license/username/hass-worcester-bosch-wave-thermostat.svg)](LICENSE)
+[![GitHub Release](https://img.shields.io/github/release/sadontsev/hass-worcester-bosch-wave-thermostat.svg)](https://github.com/sadontsev/hass-worcester-bosch-wave-thermostat/releases)
+[![License](https://img.shields.io/github/license/sadontsev/hass-worcester-bosch-wave-thermostat.svg)](LICENSE)
 
 ## Features
 
@@ -51,7 +51,7 @@ This integration provides access to **30+ metrics** organized into logical categ
    - Open HACS in Home Assistant
    - Go to "Integrations"
    - Click the three dots menu → "Custom repositories"
-   - Add this repository URL: `https://github.com/username/hass-worcester-bosch-wave-thermostat`
+   - Add this repository URL: `https://github.com/sadontsev/hass-worcester-bosch-wave-thermostat`
    - Category: "Integration"
 
 2. **Install Integration**:
@@ -70,7 +70,7 @@ This integration provides access to **30+ metrics** organized into logical categ
 1. **Download Files**:
    ```bash
    cd /config/custom_components
-   git clone https://github.com/username/hass-worcester-bosch-wave-thermostat.git worcester_bosch_wave
+   git clone https://github.com/sadontsev/hass-worcester-bosch-wave-thermostat.git worcester_bosch_wave
    ```
 
 2. **Restart Home Assistant**
@@ -239,8 +239,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/username/hass-worcester-bosch-wave-thermostat/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/username/hass-worcester-bosch-wave-thermostat/discussions)
+- **Issues**: [GitHub Issues](https://github.com/sadontsev/hass-worcester-bosch-wave-thermostat/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/sadontsev/hass-worcester-bosch-wave-thermostat/discussions)
 - **Home Assistant Community**: [Community Forum](https://community.home-assistant.io/)
 
 ---
