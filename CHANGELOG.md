@@ -5,6 +5,14 @@ All notable changes to the Worcester Bosch Wave Home Assistant integration will 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.4] - 2025-09-22
+
+### Fixed
+- Corrected HACS release configuration: previous tag v1.0.3 contained `zip_release: true` and `persistent_directory` in hacs.json, which caused HACS install errors. These are now fixed; `zip_release` is `false` and invalid fields removed going forward.
+
+### Notes
+- Please install v1.0.4 or later via HACS. If you installed v1.0.3 and saw "Unknown error", upgrade to 1.0.4.
+
 ## [1.0.3] - 2025-09-22
 
 ### Fixed
