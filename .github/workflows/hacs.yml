@@ -14,9 +14,26 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Set repository topics
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const topics = [
+              'home-assistant',
+              'hacs',
+              'homeassistant-integration',
+              'thermostat',
+              'worcester-bosch',
+              'bosch',
+              'climate'
+            ];
+            await github.rest.repos.replaceAllTopics({ owner, repo, names: topics });
+
       - name: HACS validation
         uses: hacs/action@main
         with:
           category: integration
-          # Ignore checks that require GitHub repo settings or external brands repo
-          ignore: brands,topics
+          # Ignore brands check (requires PR to external brands repo)
+          ignore: brands
