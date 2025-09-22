@@ -1,22 +1,3 @@
-"""
-Worcester Bosch Wave Smart Thermostat Integration for Home Assistant
-
-This integration provides comprehensive monitoring and control of Worcester Bosch Wave
-thermostats with all available metrics organized into logical sensor groups.
-"""
-
-import logging
-from homeassistant.core import HomeAssistant
-from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import Platform
-
-from .const import DOMAIN
-
-_LOGGER = logging.getLogger(__name__)
-
-PLATFORMS = [Platform.CLIMATE, Platform.SENSOR, Platform.BINARY_SENSOR]
-
-
 """The Worcester Bosch Wave integration."""
 from __future__ import annotations
 
