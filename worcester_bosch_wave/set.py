@@ -1,4 +1,4 @@
-from messenger import WaveMessenger
+from .messenger import WaveMessenger
 
 
 class WaveSet(WaveMessenger):

@@ -1,0 +1,10 @@
+{
+  "name": "Worcester Bosch Wave Thermostat",
+  "content_in_root": false,
+  "filename": "worcester_bosch_wave.zip",
+  "hide_default_branch": false,
+  "homeassistant": "2023.1.0",
+  "persistent_directory": false,
+  "render_readme": true,
+  "zip_release": true
+}

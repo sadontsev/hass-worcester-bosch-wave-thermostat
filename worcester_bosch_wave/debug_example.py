@@ -20,29 +20,25 @@ def load_env_file():
 
 load_env_file()
 
+print("🔬 Debug version of Worcester Bosch Wave test")
+print("=" * 50)
+
 wave = WaveThermostat(
     serial_number=os.environ.get('WAVE_SERIAL_NUMBER'),
     access_code=os.environ.get('WAVE_ACCESS_CODE'),
     password=os.environ.get('WAVE_PASSWORD'),
 )
 
+print("🔍 Testing status update...")
 wave.status.update()
-print('Current temperature: ', wave.status.current_temp)
-print('Set point temperature: ', wave.status.set_point)
-print('Full status information:')
-pprint(wave.status.data)
+print(f"Status data: {wave.status.data}")
+print(f"Current temperature: {wave.status.current_temp}")
+print(f"Set point temperature: {wave.status.set_point}")
 
-print('Setting temperature to 24 degrees')
-wave.set_temperature(24)
-wave.status.update()
-print('Current temperature: ', wave.status.current_temp)
-print('Set point temperature: ', wave.status.set_point)
-
-print('Waiting for 5 seconds')
-time.sleep(5)
-
-print('Turning off override - so back to where we were before')
-wave.override(False)
-wave.status.update()
-print('Current temperature: ', wave.status.current_temp)
-print('Set point temperature: ', wave.status.set_point)
+if wave.status.data:
+    print("\n✅ SUCCESS! We're getting thermostat data!")
+    print('Full status information:')
+    pprint(wave.status.data)
+else:
+    print("\n❌ No data received from thermostat")
+    print("The XMPP connection is working but status query failed")

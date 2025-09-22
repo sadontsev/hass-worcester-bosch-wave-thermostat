@@ -1,7 +1,7 @@
-from set import WaveSet
-from status import WaveStatus
+from .set import WaveSet
+from .status import WaveStatus
 
-from worcester_bosch_wave.constants import (
+from .constants import (
     CLOCK,
     MANUAL,
     OFF,

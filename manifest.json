@@ -1,11 +1,13 @@
 {
-  "name": "Worcester Bosch Wave Smart Control",
-  "cloud_polling": true,
-  "codeowners": ["@juanjsebgarcia"],
-  "dependencies": [],
+  "domain": "worcester_bosch_wave",
+  "name": "Worcester Bosch Wave Smart Thermostat",
+  "version": "1.0.0",
   "documentation": "https://github.com/juanjsebgarcia/hass-worcester-bosch-wave-thermostat",
-  "domain": "hass_worcester_bosch_wave_thermostat",
+  "issue_tracker": "https://github.com/juanjsebgarcia/hass-worcester-bosch-wave-thermostat/issues",
+  "codeowners": ["@juanjsebgarcia"],
+  "config_flow": true,
+  "dependencies": [],
+  "requirements": ["pycryptodome>=3.15.0", "slixmpp>=1.8.0"],
   "iot_class": "cloud_polling",
-  "requirements": ["pycrypto", "sleekxmpp"],
-  "version": "0.0.1"
+  "integration_type": "device"
 }

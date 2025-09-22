@@ -1,2 +1,2 @@
-pycrypto
-sleekxmpp
+pycryptodome
+slixmpp
