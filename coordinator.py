@@ -10,7 +10,7 @@ from typing import Any
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .worcester_bosch_wave.wave_thermo import WorcesterWaveClient
+from .worcester_bosch_wave.wave_client import WorcesterWaveClient
 
 _LOGGER = logging.getLogger(__name__)
 

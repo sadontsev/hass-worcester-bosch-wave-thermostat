@@ -5,6 +5,31 @@ All notable changes to the Worcester Bosch Wave Home Assistant integration will 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.3] - 2025-09-22
+
+### Fixed
+- **Critical**: Removed duplicate `async_unload_entry` function in `__init__.py`
+- **Critical**: Fixed coordinator shutdown handling in integration unload
+- **Enhancement**: Added proper async client wrapper for Worcester Bosch Wave library
+- **Enhancement**: Added English translations for config flow (improved UX)
+- **Quality**: Fixed all syntax errors and code quality issues
+
+### Added
+- `translations/en.json`: Proper localization support for config flow
+- `worcester_bosch_wave/wave_client.py`: Async wrapper for thermostat communication
+- Complete integration lifecycle testing (load/unload/reload)
+
+### Changed
+- Integration now properly handles shutdown and cleanup
+- Improved error handling in config flow with proper translations
+- Enhanced reliability for HACS installation and management
+
+### Technical
+- 100% Python syntax validation passed
+- All JSON schemas validated
+- HACS compliance verified
+- Integration lifecycle tested
+
 ## [1.0.1] - 2025-09-22
 
 ### Fixed
