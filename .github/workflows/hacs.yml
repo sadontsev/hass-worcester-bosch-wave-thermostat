@@ -18,4 +18,5 @@ jobs:
         uses: hacs/action@main
         with:
           category: integration
-          print-post: true
+          # Ignore checks that require GitHub repo settings or external brands repo
+          ignore: brands,topics
