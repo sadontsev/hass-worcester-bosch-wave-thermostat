@@ -99,17 +99,23 @@ git push -u origin main
 
 ### 2.2 Release Notes Template
 ```markdown
-# Worcester Bosch Wave Integration v1.0.0
+# # Worcester Bosch Wave Integration v1.0.1
 
-## 🎉 Initial Release
+## 🔧 HACS Compliance Release
 
-Complete Home Assistant integration for Worcester Bosch Wave thermostats with comprehensive metric support.
+This release fixes HACS repository structure compliance issues and ensures smooth installation.
 
-### ✨ Features
+### 🛠️ Bug Fixes & Improvements
+- **HACS Compliance**: Fixed repository structure issues that prevented HACS installation
+- **Repository URLs**: Updated all references to point to correct repository
+- **Configuration**: Fixed hacs.json content structure setting  
+- **Ownership**: Updated codeowners and maintainer information
+
+### ✨ Features (Complete Integration)
 - **Complete Climate Control**: Set temperature, change modes (Heat/Auto/Off)
 - **30+ Metrics**: Access to all available thermostat data
 - **Multiple Platforms**: Climate, Sensor, and Binary Sensor entities
-- **HACS Compatible**: Easy installation through HACS
+- **HACS Compatible**: Easy installation through HACS (now working!)
 - **VM-Friendly**: Optimized for Home Assistant VM installations
 
 ### 🏠 Available Entities
@@ -128,7 +134,7 @@ Complete Home Assistant integration for Worcester Bosch Wave thermostats with co
 - System Health, Boiler Control, Schedule Management, Holiday Mode, Frost Protection, Energy Saving, and more
 
 ### 🔧 Installation
-1. Install via HACS (recommended) or manual download
+1. Install via HACS (recommended) - now working correctly!
 2. Add integration through Home Assistant UI
 3. Enter thermostat credentials (Serial, Access Code, Password)
 
@@ -137,11 +143,17 @@ Complete Home Assistant integration for Worcester Bosch Wave thermostats with co
 - Worcester Bosch Wave thermostat with app connectivity
 - Network access to thermostat
 
-### 🐛 Known Issues
-- None at this time
+### 🐛 Fixed Issues
+- HACS repository structure compliance
+- Incorrect repository URLs in manifest.json
+- Content structure configuration in hacs.json
 
-### 🏷️ Full Changelog
-Initial release with complete functionality.
+### 🔄 Changelog
+**v1.0.1** - HACS compliance fixes and repository corrections
+**v1.0.0** - Initial release with complete functionality
+
+### 📝 Migration Notes
+If you had issues with v1.0.0, simply update to v1.0.1 through HACS or reinstall.
 ```
 
 ## 🔧 Step 3: HACS Preparation
