@@ -145,11 +145,7 @@ class WaveMessenger(slixmpp.ClientXMPP):
             print(f"⚠️ Failed to schedule timeout: {e}")
 
         # Process events until disconnect (either on response, auth failure, or timeout)
-        try:
-            self.process(forever=False)
-        finally:
-            if self.is_connected():
-                self.disconnect()
+        self.process(forever=True)
 
         if self.auth_failed:
             print("❌ Authentication failed during XMPP session")
