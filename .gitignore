@@ -73,3 +73,30 @@ target/
 # Virtual environment
 venv/
 env/
+
+# Development and testing files
+analyze_metrics.py
+enhanced_climate.py
+implementation_guide.py
+protocol_investigation.py
+basic_connection_test.py
+complete_protocol_test.py
+debug_test.py
+advanced_debug.py
+ultra_debug.py
+test_*.py
+verify_credentials.py
+setup_credentials.py
+
+# Documentation files (temporary)
+CREDENTIALS.md
+IMPLEMENTATION_COMPLETE.md
+METRICS_DOCUMENTATION.md
+TROUBLESHOOTING.md
+release-notes-*.md
+
+# Data files
+thermostat_metrics_analysis.json
+
+# Python version file
+.python-version
