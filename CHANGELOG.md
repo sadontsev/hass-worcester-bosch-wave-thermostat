@@ -5,6 +5,11 @@ All notable changes to the Worcester Bosch Wave Home Assistant integration will 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.6] - 2025-09-22
+
+### Fixed
+- Corrected a regression in XMPP messenger initialization (indentation) and explicitly disabled TLS/SSL in connect() parameters.
+
 ## [1.0.5] - 2025-09-22
 
 ### Fixed
@@ -115,5 +120,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### v1.0.1 - HACS Compliance Fix
 This release resolves HACS installation issues. If you experienced problems installing v1.0.0 via HACS, v1.0.1 should install without issues.
 
-### v1.0.0 - Initial Release  
+### v1.0.0 - Initial Release
 Complete Home Assistant integration providing comprehensive access to Worcester Bosch Wave thermostat functionality and data.

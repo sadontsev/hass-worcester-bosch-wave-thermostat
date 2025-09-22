@@ -26,6 +26,7 @@ class WaveMessenger(slixmpp.ClientXMPP):
 
         # Bosch turned off SSL/TLS in 2018
         self.use_tls = False
+        self.use_ssl = False
         self.auto_reconnect = False
 
         # State flags
@@ -122,7 +123,12 @@ class WaveMessenger(slixmpp.ClientXMPP):
 
         # Start async connection; slixmpp will finalize during process()
         try:
-            success = super().connect(address=('wa2-mz36-qrmzh6.bosch.de', 5222))
+            success = super().connect(
+                address=('wa2-mz36-qrmzh6.bosch.de', 5222),
+                use_tls=False,
+                use_ssl=False,
+                reattempt=False,
+            )
         except Exception as e:
             print(f"❌ Connect error: {e}")
             return False
