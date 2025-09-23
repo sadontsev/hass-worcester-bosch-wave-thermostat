@@ -17,7 +17,11 @@ from .coordinator import WorcesterWaveDataUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
 
-PLATFORMS: list[Platform] = [Platform.CLIMATE, Platform.SENSOR, Platform.BINARY_SENSOR]
+PLATFORMS: list[Platform] = [
+    Platform.CLIMATE,
+    Platform.SENSOR,
+    Platform.BINARY_SENSOR,
+]
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:

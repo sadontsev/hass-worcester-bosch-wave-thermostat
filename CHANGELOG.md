@@ -51,6 +51,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 	- Cancel and await any pending tasks in the loop
 	- Shutdown async generators best-effort
 
+## [1.0.18] - 2025-09-24
+- Fix PUT payload formatting for string values (e.g., usermode, override status):
+	- Build JSON via json.dumps to ensure proper quoting and avoid 400 Bad Request on mode changes
+
 ## [1.0.6] - 2025-09-22
 
 ### Fixed

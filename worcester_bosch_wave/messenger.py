@@ -1,4 +1,5 @@
 import base64
+import json
 import time
 import logging
 import slixmpp
@@ -86,7 +87,15 @@ class WaveMessenger(slixmpp.ClientXMPP):
         _LOGGER.debug("Message sent, waiting for response…")
 
     def set_message(self, url, value):
-        j = '{"value":%s}' % (repr(value))
+        # Build minimal JSON with proper quoting for strings
+        try:
+            j = json.dumps({"value": value}, separators=(",", ":"))
+        except Exception:
+            # Fallback to string formatting
+            if isinstance(value, str):
+                j = '{"value":"%s"}' % value
+            else:
+                j = '{"value":%s}' % value
         remainder = len(j) % 16
         if remainder:
             j = j + '\x00' * (16 - remainder)
