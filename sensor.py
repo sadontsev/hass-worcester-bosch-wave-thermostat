@@ -122,12 +122,14 @@ TIME_SENSORS = [
         "entity_id": "system_time",
         "device_class": SensorDeviceClass.TIMESTAMP,
         "icon": "mdi:clock-outline",
+        "enabled_by_default": False,
     },
     {
         "key": "CTR",
         "name": "Current Time Remaining",
         "entity_id": "time_remaining",
         "icon": "mdi:timer",
+        "enabled_by_default": False,
     },
 ]
 
@@ -218,6 +220,9 @@ class WorcesterWaveSensor(CoordinatorEntity, SensorEntity):
             self._attr_native_unit_of_measurement = sensor_config["unit"]
         if "icon" in sensor_config:
             self._attr_icon = sensor_config["icon"]
+        # Disable noisy time-tracking sensors by default
+        if sensor_config.get("enabled_by_default") is False:
+            self._attr_entity_registry_enabled_default = False
 
     @property
     def device_info(self) -> DeviceInfo:
@@ -288,7 +293,6 @@ class WorcesterWaveSensor(CoordinatorEntity, SensorEntity):
         attrs = {
             "data_key": self._data_key,
             "raw_value": self.coordinator.data.get(self._data_key),
-            "last_update": self.coordinator.data.get("CTD"),
         }
         
         # Add category-specific attributes

@@ -55,6 +55,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix PUT payload formatting for string values (e.g., usermode, override status):
 	- Build JSON via json.dumps to ensure proper quoting and avoid 400 Bad Request on mode changes
 
+## [1.0.19] - 2025-09-24
+- Refine Content-Length handling for PUTs:
+	- Keep fixed 25 for numeric payloads (proven working for temperatures)
+	- Use dynamic Content-Length for string payloads (mode/override) to avoid 400
+
+## [1.0.20] - 2025-09-24
+- Reduce device event noise:
+	- Disable time-tracking sensors (System Time, Time Remaining) by default
+	- Remove last_update attribute from all sensors
+
 ## [1.0.6] - 2025-09-22
 
 ### Fixed
