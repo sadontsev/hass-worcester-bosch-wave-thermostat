@@ -30,6 +30,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.13] - 2025-09-24
 - Update climate platform to use HVACMode enum (replacing deprecated HVAC_MODE_* constants) and fix an indentation error
 
+## [1.0.14] - 2025-09-24
+- Fix HTTP request lines to use proper HTTP/1.0 for GET/PUT
+- Make WaveSet handle responses without raising; propagate success/failure to client
+- Parse CTD sensor as proper datetime for DeviceClass.TIMESTAMP to avoid ValueError
+
 ## [1.0.6] - 2025-09-22
 
 ### Fixed

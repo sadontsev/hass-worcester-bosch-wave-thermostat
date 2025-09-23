@@ -90,7 +90,7 @@ class WaveMessenger(slixmpp.ClientXMPP):
         remainder = len(j) % 16
         j = j + '\x00' * (16 - remainder)
         self.msg = (
-            'PUT {} HTTP:/1.0\n'
+            'PUT {} HTTP/1.0\n'
             'Content-Type: application/json\n'
             'Content-Length: 25\n'
             'User-Agent: NefitEasy\n'

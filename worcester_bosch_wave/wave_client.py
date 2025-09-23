@@ -90,7 +90,7 @@ class WorcesterWaveClient:
                             access_code=self.access_code,
                             password=self.password,
                         )
-                        setter.post_message('heatingCircuits/hc1/temperatureRoomManual', temperature)
+                        return setter.post_message('heatingCircuits/hc1/temperatureRoomManual', temperature)
                     finally:
                         try:
                             th_loop.run_until_complete(th_loop.shutdown_asyncgens())
@@ -98,7 +98,9 @@ class WorcesterWaveClient:
                             pass
                         _asyncio.set_event_loop(None)
                         th_loop.close()
-                await loop.run_in_executor(None, _sync_set_manual)
+                ok = await loop.run_in_executor(None, _sync_set_manual)
+                if not ok:
+                    return False
             else:
                 _LOGGER.debug("Setting override temperature to %s and enabling override", temperature)
                 # Auto mode - set override temperature
@@ -112,7 +114,7 @@ class WorcesterWaveClient:
                             access_code=self.access_code,
                             password=self.password,
                         )
-                        setter.post_message('heatingCircuits/hc1/manualTempOverride/temperature', temperature)
+                        return setter.post_message('heatingCircuits/hc1/manualTempOverride/temperature', temperature)
                     finally:
                         try:
                             th_loop.run_until_complete(th_loop.shutdown_asyncgens())
@@ -120,7 +122,9 @@ class WorcesterWaveClient:
                             pass
                         _asyncio.set_event_loop(None)
                         th_loop.close()
-                await loop.run_in_executor(None, _sync_set_override_temp)
+                ok = await loop.run_in_executor(None, _sync_set_override_temp)
+                if not ok:
+                    return False
                 # Enable override
                 def _sync_enable_override():
                     import asyncio as _asyncio
@@ -132,7 +136,7 @@ class WorcesterWaveClient:
                             access_code=self.access_code,
                             password=self.password,
                         )
-                        setter.post_message('heatingCircuits/hc1/manualTempOverride/status', ON)
+                        return setter.post_message('heatingCircuits/hc1/manualTempOverride/status', ON)
                     finally:
                         try:
                             th_loop.run_until_complete(th_loop.shutdown_asyncgens())
@@ -140,7 +144,9 @@ class WorcesterWaveClient:
                             pass
                         _asyncio.set_event_loop(None)
                         th_loop.close()
-                await loop.run_in_executor(None, _sync_enable_override)
+                ok2 = await loop.run_in_executor(None, _sync_enable_override)
+                if not ok2:
+                    return False
             
             return True
             
@@ -178,7 +184,7 @@ class WorcesterWaveClient:
                         access_code=self.access_code,
                         password=self.password,
                     )
-                    setter.post_message('heatingCircuits/hc1/usermode', wave_mode)
+                    return setter.post_message('heatingCircuits/hc1/usermode', wave_mode)
                 finally:
                     try:
                         th_loop.run_until_complete(th_loop.shutdown_asyncgens())
@@ -186,7 +192,9 @@ class WorcesterWaveClient:
                         pass
                     _asyncio.set_event_loop(None)
                     th_loop.close()
-            await loop.run_in_executor(None, _sync_set_mode)
+            ok = await loop.run_in_executor(None, _sync_set_mode)
+            if not ok:
+                return False
             
             return True
             

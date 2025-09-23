@@ -258,9 +258,17 @@ class WorcesterWaveSensor(CoordinatorEntity, SensorEntity):
         # Handle timestamp values
         elif self._data_key == "CTD":
             # Parse timestamp format: "2025-09-22T18:33:30+01:00 Mo"
-            if isinstance(raw_value, str) and "T" in raw_value:
-                return raw_value.split(" ")[0]  # Return just the ISO part
-            return raw_value
+            if isinstance(raw_value, str):
+                try:
+                    # Extract ISO-8601 portion before any trailing token like weekday
+                    iso_part = raw_value.split(" ")[0]
+                    from datetime import datetime
+                    # datetime.fromisoformat supports offsets like +01:00
+                    dt = datetime.fromisoformat(iso_part)
+                    return dt
+                except Exception:
+                    return None
+            return None
             
         # Handle boolean-like values
         elif self._data_key in ["PMR", "BLE", "BBE", "BMR", "HED_EN", "HED_DEV", "FAH", "DOT"]:

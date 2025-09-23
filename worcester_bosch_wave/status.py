@@ -24,7 +24,7 @@ class WaveStatus(WaveMessenger):
             serial_number,
             access_code,
             password,
-            'GET /ecus/rrc/uiStatus HTTP /1.0\nUser-Agent: NefitEasy',
+            'GET /ecus/rrc/uiStatus HTTP/1.0\nUser-Agent: NefitEasy',
         )
 
     def message(self, msg):
