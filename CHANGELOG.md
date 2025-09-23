@@ -8,10 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.8] - 2025-09-23
 
 ### Added
-- Extensive debug logging in config flow, coordinator, and wave client to trace connection attempts and responses.
 
 ### Notes
-- Enable debug logs in Home Assistant for this integration to capture detailed traces.
+
+## [1.0.9] - 2025-09-24
+- Fix blocking SSL cert load by moving XMPP client construction to executor in config flow
+- Refactor async client to construct WaveStatus/WaveSet inside executors to avoid event loop blocking
+- Fix slixmpp connect() compatibility (use positional address tuple)
+- Minor coordinator init cleanup
 
 ## [1.0.6] - 2025-09-22
 

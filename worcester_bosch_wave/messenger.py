@@ -125,7 +125,8 @@ class WaveMessenger(slixmpp.ClientXMPP):
 
         # Start connection; slixmpp will finalize during process()
         try:
-            success = super().connect(address=('wa2-mz36-qrmzh6.bosch.de', 5222))
+            # Use positional argument for broader slixmpp compatibility
+            success = super().connect(('wa2-mz36-qrmzh6.bosch.de', 5222))
         except Exception as e:
             _LOGGER.error("Connect error: %s", e)
             return False

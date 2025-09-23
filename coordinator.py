@@ -57,8 +57,7 @@ class WorcesterWaveDataUpdateCoordinator(DataUpdateCoordinator):
                     access_code=self.access_code,
                     password=self.password,
                 )
-                await self._client.initialize()
-                _LOGGER.debug("Client initialized")
+                _LOGGER.debug("Client created")
 
             # Get status data
             _LOGGER.debug("Requesting status update…")

@@ -23,40 +23,29 @@ class WorcesterWaveClient:
         self.access_code = access_code
         self.password = password
         
-        self._status = None
-        self._setter = None
-        self._initialized = False
-    
-    async def initialize(self) -> None:
-        """Initialize the client."""
-        if not self._initialized:
-            self._status = WaveStatus(
-                serial_number=self.serial_number,
-                access_code=self.access_code,
-                password=self.password
-            )
-            self._setter = WaveSet(
-                serial_number=self.serial_number,
-                access_code=self.access_code,
-                password=self.password
-            )
-            self._initialized = True
-            _LOGGER.debug("Wave client initialized for %s", self.serial_number)
+        # No long-lived objects created on the event loop to avoid blocking
+        self._initialized = True
+        _LOGGER.debug("Wave client initialized for %s", self.serial_number)
     
     async def get_status(self) -> Optional[Dict[str, Any]]:
         """Get current thermostat status."""
-        if not self._initialized:
-            await self.initialize()
-        
         try:
             # Run the synchronous update in an executor
             loop = asyncio.get_event_loop()
             _LOGGER.debug("Wave client fetching status…")
-            await loop.run_in_executor(None, self._status.update)
-            
-            if self._status.data:
-                _LOGGER.debug("Wave client received data keys: %s", list(self._status.data.keys()))
-                return dict(self._status.data)
+            def _sync_status():
+                status = WaveStatus(
+                    serial_number=self.serial_number,
+                    access_code=self.access_code,
+                    password=self.password,
+                )
+                status.update()
+                return status.data
+
+            data = await loop.run_in_executor(None, _sync_status)
+            if data:
+                _LOGGER.debug("Wave client received data keys: %s", list(data.keys()))
+                return dict(data)
             return None
             
         except Exception as e:
@@ -65,40 +54,49 @@ class WorcesterWaveClient:
     
     async def set_temperature(self, temperature: float) -> bool:
         """Set target temperature."""
-        if not self._initialized:
-            await self.initialize()
-        
         try:
             # Get current status to determine mode
-            await self.get_status()
+            current = await self.get_status()
             
             loop = asyncio.get_event_loop()
             
-            if hasattr(self._status, 'program_mode') and self._status.program_mode == MANUAL:
+            program_mode = None
+            try:
+                program_mode = current.get('UMD') if isinstance(current, dict) else None
+            except Exception:
+                program_mode = None
+
+            if program_mode == MANUAL:
                 # Manual mode - set manual temperature
                 _LOGGER.debug("Setting manual temperature to %s", temperature)
-                await loop.run_in_executor(
-                    None,
-                    self._setter.post_message,
-                    'heatingCircuits/hc1/temperatureRoomManual',
-                    temperature
-                )
+                def _sync_set_manual():
+                    setter = WaveSet(
+                        serial_number=self.serial_number,
+                        access_code=self.access_code,
+                        password=self.password,
+                    )
+                    setter.post_message('heatingCircuits/hc1/temperatureRoomManual', temperature)
+                await loop.run_in_executor(None, _sync_set_manual)
             else:
                 _LOGGER.debug("Setting override temperature to %s and enabling override", temperature)
                 # Auto mode - set override temperature
-                await loop.run_in_executor(
-                    None,
-                    self._setter.post_message,
-                    'heatingCircuits/hc1/manualTempOverride/temperature',
-                    temperature
-                )
+                def _sync_set_override_temp():
+                    setter = WaveSet(
+                        serial_number=self.serial_number,
+                        access_code=self.access_code,
+                        password=self.password,
+                    )
+                    setter.post_message('heatingCircuits/hc1/manualTempOverride/temperature', temperature)
+                await loop.run_in_executor(None, _sync_set_override_temp)
                 # Enable override
-                await loop.run_in_executor(
-                    None,
-                    self._setter.post_message,
-                    'heatingCircuits/hc1/manualTempOverride/status',
-                    ON
-                )
+                def _sync_enable_override():
+                    setter = WaveSet(
+                        serial_number=self.serial_number,
+                        access_code=self.access_code,
+                        password=self.password,
+                    )
+                    setter.post_message('heatingCircuits/hc1/manualTempOverride/status', ON)
+                await loop.run_in_executor(None, _sync_enable_override)
             
             return True
             
@@ -108,9 +106,6 @@ class WorcesterWaveClient:
     
     async def set_mode(self, mode: str) -> bool:
         """Set thermostat mode."""
-        if not self._initialized:
-            await self.initialize()
-        
         try:
             loop = asyncio.get_event_loop()
             
@@ -129,12 +124,14 @@ class WorcesterWaveClient:
                 _LOGGER.warning("Unknown mode: %s", mode)
                 return False
             
-            await loop.run_in_executor(
-                None,
-                self._setter.post_message,
-                'heatingCircuits/hc1/usermode',
-                wave_mode
-            )
+            def _sync_set_mode():
+                setter = WaveSet(
+                    serial_number=self.serial_number,
+                    access_code=self.access_code,
+                    password=self.password,
+                )
+                setter.post_message('heatingCircuits/hc1/usermode', wave_mode)
+            await loop.run_in_executor(None, _sync_set_mode)
             
             return True
             
@@ -144,7 +141,5 @@ class WorcesterWaveClient:
     
     async def close(self) -> None:
         """Close the client connection."""
-        # Nothing to close for this implementation
+        # Nothing persistent to close in this implementation
         self._initialized = False
-        self._status = None
-        self._setter = None

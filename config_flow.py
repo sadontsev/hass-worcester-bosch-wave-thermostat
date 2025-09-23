@@ -56,14 +56,16 @@ async def validate_input(hass: HomeAssistant, data: Dict[str, Any]) -> Dict[str,
     
     # Test the connection
     try:
-        status_client = WaveStatus(serial_number, access_code, password)
+        # Build and use the XMPP client entirely in an executor to avoid blocking the event loop
+        def _sync_probe():
+            client = WaveStatus(serial_number, access_code, password)
+            client.update()
+            return getattr(client, "data", None), getattr(client, "auth_failed", False)
 
-        # Run the connection test in an executor
-        await hass.async_add_executor_job(status_client.update)
+        data_result, auth_failed = await hass.async_add_executor_job(_sync_probe)
 
-        if not getattr(status_client, "data", None):
-            # Distinguish auth failure vs general connection error when possible
-            if getattr(status_client, "auth_failed", False):
+        if not data_result:
+            if auth_failed:
                 raise InvalidAuth()
             raise CannotConnect()
 
