@@ -57,10 +57,21 @@ async def validate_input(hass: HomeAssistant, data: Dict[str, Any]) -> Dict[str,
     # Test the connection
     try:
         # Build and use the XMPP client entirely in an executor to avoid blocking the event loop
+        import asyncio as _asyncio
         def _sync_probe():
-            client = WaveStatus(serial_number, access_code, password)
-            client.update()
-            return getattr(client, "data", None), getattr(client, "auth_failed", False)
+            loop = _asyncio.new_event_loop()
+            try:
+                _asyncio.set_event_loop(loop)
+                client = WaveStatus(serial_number, access_code, password)
+                client.update()
+                return getattr(client, "data", None), getattr(client, "auth_failed", False)
+            finally:
+                try:
+                    loop.run_until_complete(loop.shutdown_asyncgens())
+                except Exception:
+                    pass
+                _asyncio.set_event_loop(None)
+                loop.close()
 
         data_result, auth_failed = await hass.async_add_executor_job(_sync_probe)
 

@@ -17,6 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix slixmpp connect() compatibility (use positional address tuple)
 - Minor coordinator init cleanup
 
+## [1.0.10] - 2025-09-24
+- Fix "There is no current event loop in thread 'SyncWorker_*'" by creating a thread-local asyncio loop in executor tasks before constructing slixmpp clients
+
 ## [1.0.6] - 2025-09-22
 
 ### Fixed

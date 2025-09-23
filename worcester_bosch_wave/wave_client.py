@@ -34,13 +34,24 @@ class WorcesterWaveClient:
             loop = asyncio.get_event_loop()
             _LOGGER.debug("Wave client fetching status…")
             def _sync_status():
-                status = WaveStatus(
-                    serial_number=self.serial_number,
-                    access_code=self.access_code,
-                    password=self.password,
-                )
-                status.update()
-                return status.data
+                import asyncio as _asyncio
+                th_loop = _asyncio.new_event_loop()
+                try:
+                    _asyncio.set_event_loop(th_loop)
+                    status = WaveStatus(
+                        serial_number=self.serial_number,
+                        access_code=self.access_code,
+                        password=self.password,
+                    )
+                    status.update()
+                    return status.data
+                finally:
+                    try:
+                        th_loop.run_until_complete(th_loop.shutdown_asyncgens())
+                    except Exception:
+                        pass
+                    _asyncio.set_event_loop(None)
+                    th_loop.close()
 
             data = await loop.run_in_executor(None, _sync_status)
             if data:
@@ -70,32 +81,65 @@ class WorcesterWaveClient:
                 # Manual mode - set manual temperature
                 _LOGGER.debug("Setting manual temperature to %s", temperature)
                 def _sync_set_manual():
-                    setter = WaveSet(
-                        serial_number=self.serial_number,
-                        access_code=self.access_code,
-                        password=self.password,
-                    )
-                    setter.post_message('heatingCircuits/hc1/temperatureRoomManual', temperature)
+                    import asyncio as _asyncio
+                    th_loop = _asyncio.new_event_loop()
+                    try:
+                        _asyncio.set_event_loop(th_loop)
+                        setter = WaveSet(
+                            serial_number=self.serial_number,
+                            access_code=self.access_code,
+                            password=self.password,
+                        )
+                        setter.post_message('heatingCircuits/hc1/temperatureRoomManual', temperature)
+                    finally:
+                        try:
+                            th_loop.run_until_complete(th_loop.shutdown_asyncgens())
+                        except Exception:
+                            pass
+                        _asyncio.set_event_loop(None)
+                        th_loop.close()
                 await loop.run_in_executor(None, _sync_set_manual)
             else:
                 _LOGGER.debug("Setting override temperature to %s and enabling override", temperature)
                 # Auto mode - set override temperature
                 def _sync_set_override_temp():
-                    setter = WaveSet(
-                        serial_number=self.serial_number,
-                        access_code=self.access_code,
-                        password=self.password,
-                    )
-                    setter.post_message('heatingCircuits/hc1/manualTempOverride/temperature', temperature)
+                    import asyncio as _asyncio
+                    th_loop = _asyncio.new_event_loop()
+                    try:
+                        _asyncio.set_event_loop(th_loop)
+                        setter = WaveSet(
+                            serial_number=self.serial_number,
+                            access_code=self.access_code,
+                            password=self.password,
+                        )
+                        setter.post_message('heatingCircuits/hc1/manualTempOverride/temperature', temperature)
+                    finally:
+                        try:
+                            th_loop.run_until_complete(th_loop.shutdown_asyncgens())
+                        except Exception:
+                            pass
+                        _asyncio.set_event_loop(None)
+                        th_loop.close()
                 await loop.run_in_executor(None, _sync_set_override_temp)
                 # Enable override
                 def _sync_enable_override():
-                    setter = WaveSet(
-                        serial_number=self.serial_number,
-                        access_code=self.access_code,
-                        password=self.password,
-                    )
-                    setter.post_message('heatingCircuits/hc1/manualTempOverride/status', ON)
+                    import asyncio as _asyncio
+                    th_loop = _asyncio.new_event_loop()
+                    try:
+                        _asyncio.set_event_loop(th_loop)
+                        setter = WaveSet(
+                            serial_number=self.serial_number,
+                            access_code=self.access_code,
+                            password=self.password,
+                        )
+                        setter.post_message('heatingCircuits/hc1/manualTempOverride/status', ON)
+                    finally:
+                        try:
+                            th_loop.run_until_complete(th_loop.shutdown_asyncgens())
+                        except Exception:
+                            pass
+                        _asyncio.set_event_loop(None)
+                        th_loop.close()
                 await loop.run_in_executor(None, _sync_enable_override)
             
             return True
@@ -125,12 +169,23 @@ class WorcesterWaveClient:
                 return False
             
             def _sync_set_mode():
-                setter = WaveSet(
-                    serial_number=self.serial_number,
-                    access_code=self.access_code,
-                    password=self.password,
-                )
-                setter.post_message('heatingCircuits/hc1/usermode', wave_mode)
+                import asyncio as _asyncio
+                th_loop = _asyncio.new_event_loop()
+                try:
+                    _asyncio.set_event_loop(th_loop)
+                    setter = WaveSet(
+                        serial_number=self.serial_number,
+                        access_code=self.access_code,
+                        password=self.password,
+                    )
+                    setter.post_message('heatingCircuits/hc1/usermode', wave_mode)
+                finally:
+                    try:
+                        th_loop.run_until_complete(th_loop.shutdown_asyncgens())
+                    except Exception:
+                        pass
+                    _asyncio.set_event_loop(None)
+                    th_loop.close()
             await loop.run_in_executor(None, _sync_set_mode)
             
             return True
