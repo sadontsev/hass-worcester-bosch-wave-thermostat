@@ -82,9 +82,9 @@ This integration provides access to **30+ metrics** organized into logical categ
 ### Required Information
 You'll need these details from your Worcester Bosch Wave app:
 
-- **Serial Number**: Your thermostat's unique identifier
-- **Access Code**: 4-digit code from the thermostat display  
-- **Password**: Password set in the Wave app
+- **Serial Number**: Your thermostat's unique identifier (enter without spaces)
+- **Access Code**: 16-character code from the app/thermostat (enter without spaces)  
+- **Password**: 4-digit password set in the Wave app
 
 ### Finding Your Credentials
 
@@ -93,8 +93,8 @@ You'll need these details from your Worcester Bosch Wave app:
    - Also visible in the Wave mobile app
 
 2. **Access Code**:
-   - Display on thermostat: Menu → Settings → System → Access Code
-   - 4-digit numeric code
+  - Display on thermostat: Menu → Settings → System → Access Code
+  - 16-character code (letters and numbers), enter without spaces
 
 3. **Password**:
    - Set when configuring the Wave app
@@ -184,7 +184,7 @@ UPDATE_INTERVAL = timedelta(seconds=60)  # Reduce API calls
    - Ensure Home Assistant can reach thermostat network
 
 2. **Authentication Errors**:
-   - Re-check 4-digit access code
+  - Re-check 16-character access code
    - Verify password matches Wave app
    - Try regenerating access code on thermostat
 

@@ -42,6 +42,11 @@ async def validate_input(hass: HomeAssistant, data: Dict[str, Any]) -> Dict[str,
     serial_number = data[CONF_SERIAL_NUMBER]
     access_code = data[CONF_ACCESS_CODE]
     password = data[CONF_PASSWORD]
+    # Normalize inputs (strip whitespace/spaces per device expectations)
+    if isinstance(serial_number, str):
+        serial_number = serial_number.replace(" ", "").strip()
+    if isinstance(access_code, str):
+        access_code = access_code.replace(" ", "").strip()
     try:
         masked_access = access_code[:4] + "…" + access_code[-4:]
     except Exception:
@@ -114,9 +119,9 @@ class WorcesterWaveConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 step_id="user", 
                 data_schema=STEP_USER_DATA_SCHEMA,
                 description_placeholders={
-                    "serial_number": "Your thermostat serial number (e.g., 757940591)",
-                    "access_code": "Your access code from the app (e.g., K5p4ietYG9DcJeDP)", 
-                    "password": "Your user password (e.g., 3864)",
+                    "serial_number": "Your thermostat serial number (no spaces, e.g., 757940591)",
+                    "access_code": "Your 16-character access code from the app (no spaces, e.g., K5p4ietYG9DcJeDP)", 
+                    "password": "Your user password (4-digit, e.g., 3864)",
                 }
             )
 
@@ -142,8 +147,8 @@ class WorcesterWaveConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             data_schema=STEP_USER_DATA_SCHEMA, 
             errors=errors,
             description_placeholders={
-                "serial_number": "Your thermostat serial number (e.g., 757940591)",
-                "access_code": "Your access code from the app (e.g., K5p4ietYG9DcJeDP)", 
-                "password": "Your user password (e.g., 3864)",
+                "serial_number": "Your thermostat serial number (no spaces, e.g., 757940591)",
+                "access_code": "Your 16-character access code from the app (no spaces, e.g., K5p4ietYG9DcJeDP)", 
+                "password": "Your user password (4-digit, e.g., 3864)",
             }
         )

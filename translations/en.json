@@ -3,10 +3,10 @@
     "step": {
       "user": {
         "title": "Worcester Bosch Wave Thermostat",
-        "description": "Enter your Worcester Bosch Wave thermostat credentials. You can find these in your Wave mobile app and on the thermostat display.",
+        "description": "Enter your Worcester Bosch Wave thermostat credentials. You can find these in your Wave mobile app and on the thermostat display. Note: enter Serial Number and Access Code without spaces.",
         "data": {
-          "serial_number": "Serial Number",
-          "access_code": "Access Code (16 characters)",
+          "serial_number": "Serial Number (no spaces)",
+          "access_code": "Access Code (16 characters, no spaces)",
           "password": "Password (4-digit)"
         }
       }

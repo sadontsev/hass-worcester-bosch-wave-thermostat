@@ -21,6 +21,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix "There is no current event loop in thread 'SyncWorker_*'" by creating a thread-local asyncio loop in executor tasks before constructing slixmpp clients
 
 ## [1.0.11] - 2025-09-24
+
+## [1.0.21] - 2025-09-24
+- Improve config UX and docs:
+	- Access Code labeled as 16 characters; both Serial Number and Access Code marked "no spaces"
+	- Config form placeholders updated accordingly; inputs normalized by stripping spaces
+	- README corrected to reflect 16-character Access Code
 - Add slixmpp processing fallback: if process() is unavailable, wait on the disconnected future via the loop to complete the transaction
 
 ## [1.0.12] - 2025-09-24
