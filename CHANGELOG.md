@@ -23,6 +23,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.11] - 2025-09-24
 - Add slixmpp processing fallback: if process() is unavailable, wait on the disconnected future via the loop to complete the transaction
 
+## [1.0.12] - 2025-09-24
+- Handle slixmpp.connect() possibly returning a coroutine; await it on the internal loop for compatibility
+- Refine fallback processing to wait directly on 'disconnected' future
+
 ## [1.0.6] - 2025-09-22
 
 ### Fixed

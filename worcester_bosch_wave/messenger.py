@@ -126,7 +126,17 @@ class WaveMessenger(slixmpp.ClientXMPP):
         # Start connection; slixmpp will finalize during process()
         try:
             # Use positional argument for broader slixmpp compatibility
-            success = super().connect(('wa2-mz36-qrmzh6.bosch.de', 5222))
+            result = super().connect(('wa2-mz36-qrmzh6.bosch.de', 5222))
+            # Some slixmpp versions return a coroutine for connect(); await it on our loop
+            try:
+                import asyncio as _asyncio
+                if _asyncio.iscoroutine(result):
+                    self.loop.run_until_complete(result)
+                    success = True
+                else:
+                    success = bool(result)
+            except Exception:
+                success = bool(result)
         except Exception as e:
             _LOGGER.error("Connect error: %s", e)
             return False
@@ -146,14 +156,11 @@ class WaveMessenger(slixmpp.ClientXMPP):
             # Older/compatible API path
             self.process(forever=True)
         except AttributeError:
-            # Fallback for slixmpp versions without process()
-            import asyncio as _asyncio
+            # Fallback for slixmpp versions without process(): wait on the 'disconnected' future
             try:
-                self.loop.run_until_complete(
-                    _asyncio.wait_for(self.disconnected, timeout + 5)
-                )
+                self.loop.run_until_complete(self.disconnected)
             except Exception as e:
-                _LOGGER.debug("Fallback wait on disconnected failed: %s", e)
+                _LOGGER.debug("Fallback wait on 'disconnected' failed: %s", e)
 
         if self.auth_failed:
             _LOGGER.warning("Authentication failed during XMPP session")
