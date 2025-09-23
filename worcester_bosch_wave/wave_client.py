@@ -9,7 +9,7 @@ from typing import Optional, Dict, Any
 
 from .status import WaveStatus
 from .set import WaveSet
-from .constants import MANUAL, CLOCK, ON, OFF
+from .constants import MANUAL, CLOCK, ON, OFF, PATH_BASE
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -90,7 +90,7 @@ class WorcesterWaveClient:
                             access_code=self.access_code,
                             password=self.password,
                         )
-                        return setter.post_message('heatingCircuits/hc1/temperatureRoomManual', temperature)
+                        return setter.post_message(f'{PATH_BASE}temperatureRoomManual', temperature)
                     finally:
                         try:
                             th_loop.run_until_complete(th_loop.shutdown_asyncgens())
@@ -114,7 +114,7 @@ class WorcesterWaveClient:
                             access_code=self.access_code,
                             password=self.password,
                         )
-                        return setter.post_message('heatingCircuits/hc1/manualTempOverride/temperature', temperature)
+                        return setter.post_message(f'{PATH_BASE}manualTempOverride/temperature', temperature)
                     finally:
                         try:
                             th_loop.run_until_complete(th_loop.shutdown_asyncgens())
@@ -136,7 +136,7 @@ class WorcesterWaveClient:
                             access_code=self.access_code,
                             password=self.password,
                         )
-                        return setter.post_message('heatingCircuits/hc1/manualTempOverride/status', ON)
+                        return setter.post_message(f'{PATH_BASE}manualTempOverride/status', ON)
                     finally:
                         try:
                             th_loop.run_until_complete(th_loop.shutdown_asyncgens())
@@ -184,7 +184,7 @@ class WorcesterWaveClient:
                         access_code=self.access_code,
                         password=self.password,
                     )
-                    return setter.post_message('heatingCircuits/hc1/usermode', wave_mode)
+                    return setter.post_message(f'{PATH_BASE}usermode', wave_mode)
                 finally:
                     try:
                         th_loop.run_until_complete(th_loop.shutdown_asyncgens())

@@ -88,14 +88,17 @@ class WaveMessenger(slixmpp.ClientXMPP):
     def set_message(self, url, value):
         j = '{"value":%s}' % (repr(value))
         remainder = len(j) % 16
-        j = j + '\x00' * (16 - remainder)
+        if remainder:
+            j = j + '\x00' * (16 - remainder)
+        enc = self.encode(j).decode('utf-8')
+        content_length = len(enc)
         self.msg = (
             'PUT {} HTTP/1.0\n'
             'Content-Type: application/json\n'
-            'Content-Length: 25\n'
+            'Content-Length: {}\n'
             'User-Agent: NefitEasy\n'
             '\n\n\n{}\n'
-        ).format(url, self.encode(j).decode('utf-8'))
+        ).format(url, content_length, enc)
 
     def encode(self, s):
         a = AES.new(self.key, AES.MODE_ECB)

@@ -35,6 +35,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Make WaveSet handle responses without raising; propagate success/failure to client
 - Parse CTD sensor as proper datetime for DeviceClass.TIMESTAMP to avoid ValueError
 
+## [1.0.15] - 2025-09-24
+- Use correct endpoint paths with leading slash via PATH_BASE for all PUTs
+- Compute Content-Length dynamically based on encrypted payload to avoid 400 Bad Request
+
 ## [1.0.6] - 2025-09-22
 
 ### Fixed
