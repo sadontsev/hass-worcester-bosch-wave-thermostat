@@ -39,6 +39,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Use correct endpoint paths with leading slash via PATH_BASE for all PUTs
 - Compute Content-Length dynamically based on encrypted payload to avoid 400 Bad Request
 
+## [1.0.16] - 2025-09-24
+- Align PUT request formatting with legacy device expectations:
+	- HTTP:/1.0 in request line (single slash per legacy implementations)
+	- Fixed Content-Length: 25
+	- Four newline separators before encrypted body
+	These tweaks aim to resolve stubborn 400 Bad Request responses when setting temperature.
+
 ## [1.0.6] - 2025-09-22
 
 ### Fixed
