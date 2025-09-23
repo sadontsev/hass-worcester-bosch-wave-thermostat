@@ -100,14 +100,18 @@ class WaveMessenger(slixmpp.ClientXMPP):
         if remainder:
             j = j + '\x00' * (16 - remainder)
         enc = self.encode(j).decode('utf-8')
-        # Match legacy behavior known to work with the device
+        # Content-Length quirks: numbers worked reliably with fixed 25; strings need exact length
+        if isinstance(value, (int, float)):
+            content_length = 25
+        else:
+            content_length = len(enc)
         self.msg = (
             'PUT {} HTTP:/1.0\n'
             'Content-Type: application/json\n'
-            'Content-Length: 25\n'
+            'Content-Length: {}\n'
             'User-Agent: NefitEasy\n'
             '\n\n\n\n{}\n'
-        ).format(url, enc)
+        ).format(url, content_length, enc)
 
     def encode(self, s):
         a = AES.new(self.key, AES.MODE_ECB)
