@@ -41,6 +41,7 @@ class WorcesterWaveClient:
                 password=self.password
             )
             self._initialized = True
+            _LOGGER.debug("Wave client initialized for %s", self.serial_number)
     
     async def get_status(self) -> Optional[Dict[str, Any]]:
         """Get current thermostat status."""
@@ -50,9 +51,11 @@ class WorcesterWaveClient:
         try:
             # Run the synchronous update in an executor
             loop = asyncio.get_event_loop()
+            _LOGGER.debug("Wave client fetching status…")
             await loop.run_in_executor(None, self._status.update)
             
             if self._status.data:
+                _LOGGER.debug("Wave client received data keys: %s", list(self._status.data.keys()))
                 return dict(self._status.data)
             return None
             
@@ -73,6 +76,7 @@ class WorcesterWaveClient:
             
             if hasattr(self._status, 'program_mode') and self._status.program_mode == MANUAL:
                 # Manual mode - set manual temperature
+                _LOGGER.debug("Setting manual temperature to %s", temperature)
                 await loop.run_in_executor(
                     None,
                     self._setter.post_message,
@@ -80,6 +84,7 @@ class WorcesterWaveClient:
                     temperature
                 )
             else:
+                _LOGGER.debug("Setting override temperature to %s and enabling override", temperature)
                 # Auto mode - set override temperature
                 await loop.run_in_executor(
                     None,
@@ -110,12 +115,14 @@ class WorcesterWaveClient:
             loop = asyncio.get_event_loop()
             
             # Map HA modes to Wave modes
+            _LOGGER.debug("Setting mode: %s", mode)
             if mode == "heat":
                 wave_mode = MANUAL
             elif mode == "auto":
                 wave_mode = CLOCK
             elif mode == "off":
                 # Turn off by setting very low temperature
+                _LOGGER.debug("Setting off via low temperature")
                 await self.set_temperature(5.0)
                 return True
             else:

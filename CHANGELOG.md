@@ -5,6 +5,14 @@ All notable changes to the Worcester Bosch Wave Home Assistant integration will 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.8] - 2025-09-23
+
+### Added
+- Extensive debug logging in config flow, coordinator, and wave client to trace connection attempts and responses.
+
+### Notes
+- Enable debug logs in Home Assistant for this integration to capture detailed traces.
+
 ## [1.0.6] - 2025-09-22
 
 ### Fixed

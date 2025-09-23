@@ -42,6 +42,17 @@ async def validate_input(hass: HomeAssistant, data: Dict[str, Any]) -> Dict[str,
     serial_number = data[CONF_SERIAL_NUMBER]
     access_code = data[CONF_ACCESS_CODE]
     password = data[CONF_PASSWORD]
+    try:
+        masked_access = access_code[:4] + "…" + access_code[-4:]
+    except Exception:
+        masked_access = "***"
+    masked_pwd = "*" * len(password) if password else ""
+    _LOGGER.debug(
+        "Validating credentials serial=%s access=%s pwd_len=%d",
+        serial_number,
+        masked_access,
+        len(password) if password else 0,
+    )
     
     # Test the connection
     try:
@@ -71,7 +82,7 @@ async def validate_input(hass: HomeAssistant, data: Dict[str, Any]) -> Dict[str,
     except CannotConnect:
         raise
     except Exception as e:
-        _LOGGER.error(f"Connection validation failed: {e}")
+        _LOGGER.error("Connection validation failed: %s", e)
         # Treat unexpected errors as connection issues for now
         raise CannotConnect()
 

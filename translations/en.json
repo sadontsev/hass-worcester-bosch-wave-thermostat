@@ -6,8 +6,8 @@
         "description": "Enter your Worcester Bosch Wave thermostat credentials. You can find these in your Wave mobile app and on the thermostat display.",
         "data": {
           "serial_number": "Serial Number",
-          "access_code": "Access Code (4-digit)",
-          "password": "Password"
+          "access_code": "Access Code (16 characters)",
+          "password": "Password (4-digit)"
         }
       }
     },

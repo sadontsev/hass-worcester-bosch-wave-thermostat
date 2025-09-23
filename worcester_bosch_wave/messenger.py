@@ -1,10 +1,13 @@
 import base64
 import time
+import logging
 import slixmpp
 from Crypto.Cipher import AES
 from .utils import get_md5
 
 from .constants import SECRET
+
+_LOGGER = logging.getLogger(__name__)
 
 
 class WaveMessenger(slixmpp.ClientXMPP):
@@ -38,7 +41,7 @@ class WaveMessenger(slixmpp.ClientXMPP):
 
         # Event handlers
         self.add_event_handler('session_start', self._on_session_start)
-        self.add_event_handler('message', self.message)
+        self.add_event_handler('message', self.message)  # overridden in subclass
         self.add_event_handler('connected', self._on_connected)
         self.add_event_handler('disconnected', self._on_disconnected)
         self.add_event_handler('failed_auth', self._on_failed_auth)
@@ -51,37 +54,36 @@ class WaveMessenger(slixmpp.ClientXMPP):
 
     # ---- Event handlers ----
     def _on_connected(self, event):
-        print(f"🔗 XMPP connected: {event}")
+        _LOGGER.debug("XMPP connected: %s", event)
         self.connected = True
 
     def _on_disconnected(self, event):
-        print(f"🔌 XMPP disconnected: {event}")
+        _LOGGER.debug("XMPP disconnected: %s", event)
         self.connected = False
 
     def _on_failed_auth(self, event):
-        print(f"❌ XMPP authentication failed: {event}")
+        _LOGGER.warning("XMPP authentication failed: %s", event)
         self.auth_failed = True
 
     def _on_stream_error(self, event):
-        print(f"⚠️ XMPP stream error: {event}")
+        _LOGGER.error("XMPP stream error: %s", event)
 
     async def _on_session_start(self, event):
-        print("🚀 XMPP session started")
+        _LOGGER.debug("XMPP session started")
         self.session_started = True
         self.send_presence()
         try:
             await self.get_roster()
         except Exception as e:
-            print(f"⚠️ get_roster failed: {e}")
+            _LOGGER.debug("get_roster failed: %s", e)
         self._send()
 
     # ---- Messaging ----
     def _send(self):
-        print(f"📤 Sending message to {self.recipient}")
-        print(f"📝 Message content: {self.msg[:100]}...")
+        _LOGGER.debug("Sending message to %s", self.recipient)
         self.send_message(mto=self.recipient, mbody=self.msg, mtype='chat')
         self.message_sent = True
-        print("✅ Message sent, waiting for response...")
+        _LOGGER.debug("Message sent, waiting for response…")
 
     def set_message(self, url, value):
         j = '{"value":%s}' % (repr(value))
@@ -108,33 +110,27 @@ class WaveMessenger(slixmpp.ClientXMPP):
         return a.decrypt(decoded)
 
     # ---- Runner ----
-    def run(self, timeout: int = 20):
+    def run(self, timeout: int = 30):
         """Blocking runner used by sync contexts.
 
         Connects, processes XMPP events, and disconnects on response or timeout.
         Returns True if a response was received.
         """
-        print("🔌 Starting XMPP connection…")
+        _LOGGER.debug("Starting XMPP connection…")
         # Ensure flags reset for each run
         self.response_received = False
         self.auth_failed = False
         self.session_started = False
         self.message_sent = False
 
-        # Start async connection; slixmpp will finalize during process()
+        # Start connection; slixmpp will finalize during process()
         try:
-            success = super().connect(
-                address=('wa2-mz36-qrmzh6.bosch.de', 5222),
-                use_tls=False,
-                use_ssl=False,
-                reattempt=False,
-            )
+            success = super().connect(address=('wa2-mz36-qrmzh6.bosch.de', 5222))
         except Exception as e:
-            print(f"❌ Connect error: {e}")
+            _LOGGER.error("Connect error: %s", e)
             return False
 
-        print(f"� Connect initiated: {success}")
-
+        _LOGGER.debug("Connect initiated: %s", success)
         if not success:
             return False
 
@@ -142,19 +138,19 @@ class WaveMessenger(slixmpp.ClientXMPP):
         try:
             self.loop.call_later(timeout, self._timeout_disconnect)
         except Exception as e:
-            print(f"⚠️ Failed to schedule timeout: {e}")
+            _LOGGER.debug("Failed to schedule timeout: %s", e)
 
         # Process events until disconnect (either on response, auth failure, or timeout)
         self.process(forever=True)
 
         if self.auth_failed:
-            print("❌ Authentication failed during XMPP session")
+            _LOGGER.warning("Authentication failed during XMPP session")
             return False
 
-        print(f"🏁 Finished processing. Response: {self.response_received}")
+        _LOGGER.debug("Finished processing. Response received: %s", self.response_received)
         return self.response_received
 
     def _timeout_disconnect(self):
         if not self.response_received and self.is_connected():
-            print("⏱️ Timeout reached, disconnecting…")
+            _LOGGER.debug("Timeout reached, disconnecting…")
             self.disconnect()

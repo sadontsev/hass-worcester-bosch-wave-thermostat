@@ -40,6 +40,13 @@ class WorcesterWaveDataUpdateCoordinator(DataUpdateCoordinator):
             name="Worcester Bosch Wave",
             update_interval=UPDATE_INTERVAL,
         )
+        try:
+            masked_access = access_code[:4] + "…" + access_code[-4:]
+        except Exception:
+            masked_access = "***"
+        _LOGGER.debug(
+            "Coordinator init serial=%s access=%s", self.serial_number, masked_access
+        )
 
     async def _async_update_data(self) -> dict[str, Any]:
         """Fetch data from the thermostat."""
@@ -51,8 +58,10 @@ class WorcesterWaveDataUpdateCoordinator(DataUpdateCoordinator):
                     password=self.password,
                 )
                 await self._client.initialize()
+                _LOGGER.debug("Client initialized")
 
             # Get status data
+            _LOGGER.debug("Requesting status update…")
             status_data = await self._client.get_status()
             
             if not status_data:
