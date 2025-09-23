@@ -46,6 +46,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 	- Four newline separators before encrypted body
 	These tweaks aim to resolve stubborn 400 Bad Request responses when setting temperature.
 
+## [1.0.17] - 2025-09-24
+- Clean up XMPP event loop after each request to avoid "Task was destroyed but it is pending" warnings:
+	- Cancel and await any pending tasks in the loop
+	- Shutdown async generators best-effort
+
 ## [1.0.6] - 2025-09-22
 
 ### Fixed

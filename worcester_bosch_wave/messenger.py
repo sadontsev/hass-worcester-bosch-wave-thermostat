@@ -165,6 +165,31 @@ class WaveMessenger(slixmpp.ClientXMPP):
             except Exception as e:
                 _LOGGER.debug("Fallback wait on 'disconnected' failed: %s", e)
 
+        # Best-effort cleanup: cancel and await any pending tasks to avoid 'Task was destroyed' warnings
+        try:
+            import asyncio as _asyncio
+            try:
+                pending = [t for t in _asyncio.all_tasks(self.loop) if not t.done()]
+            except TypeError:
+                # Older/newer Python versions may not accept the loop argument
+                pending = [t for t in _asyncio.all_tasks() if not t.done()]
+
+            if pending:
+                _LOGGER.debug("Cancelling %d pending task(s) in XMPP loop", len(pending))
+                for task in pending:
+                    task.cancel()
+                try:
+                    self.loop.run_until_complete(_asyncio.gather(*pending, return_exceptions=True))
+                except Exception as e:
+                    _LOGGER.debug("Error awaiting cancelled tasks: %s", e)
+
+            try:
+                self.loop.run_until_complete(self.loop.shutdown_asyncgens())
+            except Exception as e:
+                _LOGGER.debug("shutdown_asyncgens failed: %s", e)
+        except Exception as e:
+            _LOGGER.debug("Cleanup step encountered an error: %s", e)
+
         if self.auth_failed:
             _LOGGER.warning("Authentication failed during XMPP session")
             return False
