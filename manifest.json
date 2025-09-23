@@ -1,7 +1,7 @@
 {
   "domain": "worcester_bosch_wave",
   "name": "Worcester Bosch Wave Smart Thermostat",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "documentation": "https://github.com/sadontsev/hass-worcester-bosch-wave-thermostat",
   "issue_tracker": "https://github.com/sadontsev/hass-worcester-bosch-wave-thermostat/issues",
   "codeowners": ["@sadontsev"],

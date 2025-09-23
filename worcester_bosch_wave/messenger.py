@@ -142,7 +142,18 @@ class WaveMessenger(slixmpp.ClientXMPP):
             _LOGGER.debug("Failed to schedule timeout: %s", e)
 
         # Process events until disconnect (either on response, auth failure, or timeout)
-        self.process(forever=True)
+        try:
+            # Older/compatible API path
+            self.process(forever=True)
+        except AttributeError:
+            # Fallback for slixmpp versions without process()
+            import asyncio as _asyncio
+            try:
+                self.loop.run_until_complete(
+                    _asyncio.wait_for(self.disconnected, timeout + 5)
+                )
+            except Exception as e:
+                _LOGGER.debug("Fallback wait on disconnected failed: %s", e)
 
         if self.auth_failed:
             _LOGGER.warning("Authentication failed during XMPP session")

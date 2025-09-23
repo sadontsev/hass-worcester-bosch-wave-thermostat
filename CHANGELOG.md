@@ -20,6 +20,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.10] - 2025-09-24
 - Fix "There is no current event loop in thread 'SyncWorker_*'" by creating a thread-local asyncio loop in executor tasks before constructing slixmpp clients
 
+## [1.0.11] - 2025-09-24
+- Add slixmpp processing fallback: if process() is unavailable, wait on the disconnected future via the loop to complete the transaction
+
 ## [1.0.6] - 2025-09-22
 
 ### Fixed
