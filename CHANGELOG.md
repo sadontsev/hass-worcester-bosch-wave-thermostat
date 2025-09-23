@@ -27,6 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Handle slixmpp.connect() possibly returning a coroutine; await it on the internal loop for compatibility
 - Refine fallback processing to wait directly on 'disconnected' future
 
+## [1.0.13] - 2025-09-24
+- Update climate platform to use HVACMode enum (replacing deprecated HVAC_MODE_* constants) and fix an indentation error
+
 ## [1.0.6] - 2025-09-22
 
 ### Fixed
